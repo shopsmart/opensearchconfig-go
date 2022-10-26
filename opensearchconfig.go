@@ -50,7 +50,7 @@ func ConfigFromEnv() (opensearch.Config, error) {
 
 	switch v.GetString("auth") {
 	case "iam":
-		log.Debug("using iam auth")
+		log.Debug("configuring iam auth")
 
 		ctx := context.Background()
 

@@ -32,7 +32,7 @@ func main() {
 func PingOpenSearch(client *opensearch.Client) error {
 	ping := opensearchapi.PingRequest{}
 
-	log.WithFields(log.Fields{"req": ping}).Debug("making a ping request to opensearch")
+	log.Debug("making a ping request to opensearch")
 
 	resp, err := ping.Do(context.Background(), client)
 	if err != nil {
