@@ -1,7 +1,7 @@
 ---
-name: go-template
+name: opensearchconfig-go
 team: techops
-type: template
+type: application
 tags:
   language: go
   dependencies: gomod

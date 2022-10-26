@@ -1,7 +1,6 @@
 ---
 repository:
-  name: go-template
-  description: A template for golang applications
+  name: opensearchconfig-go
   private: true
   has_issues: true
   default_branch: main
