@@ -1,0 +1,60 @@
+---
+name: Verify Pull Request
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.go'
+      - .go-version
+      - .pre-commit-config.yaml
+      - go.mod
+      - go.sum
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    if: github.event.repository.name != 'go-template'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Go Version
+        id: goversion
+        run: |
+          set -eo pipefail
+          version="$(< .go-version)"
+          echo "::set-output name=version::$version"
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ steps.goversion.outputs.version }}
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: go test -v ./...
+
+  precommit:
+    name: Run precommit check
+    runs-on: ubuntu-latest
+    if: github.event.repository.name != 'go-template'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+
+      - name: Get Go Version
+        id: goversion
+        run: |
+          set -eo pipefail
+          version="$(< .go-version)"
+          echo "::set-output name=version::$version"
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ steps.goversion.outputs.version }}
+
+      - name: Run pre-commit check
+        uses: pre-commit/action@v2.0.0

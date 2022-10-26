@@ -1,0 +1,63 @@
+---
+name: Template Cleanup
+on:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    if: github.event.repository.name != 'go-template'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        # @see https://github.com/marketplace/actions/github-commit-push
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      # The cleanup task is intended to change/remove any files that are specific to the template that should be different in the child repository.
+      - name: Cleanup
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+        run: |
+          # Fix the settings file
+          sed -i '/^  description:.*/d' .github/settings.yml
+          sed -i "s/^  name:.*/  name: $REPOSITORY/" .github/settings.yml
+          git add .github/settings.yml
+
+          # Fix the bd config
+          sed -i "s/^name:.*/name: $REPOSITORY/" .bd.yml # Default to the repo name
+          sed -i "s/^type:.*/type: application/" .bd.yml # Assume this is an application
+          git add .bd.yml
+
+          # Delete the README
+          git rm -f README.md
+
+          # Last step is to delete itself
+          git rm -f .github/workflows/template-cleanup.yml
+
+      # Create pull request
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: github/template-cleanup
+          base: main
+          committer: "GitHub Action <action@github.com>"
+          commit-message: Template cleanup
+          title: Cleans up template-specific configurations
+          body: |
+            ## Problem
+
+            This repository was cloned from a template and some configurations still point to that template.
+
+            ## Solution
+
+            Deletes/modifies configurations specific to the template.

@@ -1,0 +1,7 @@
+---
+name: go-template
+team: techops
+type: template
+tags:
+  language: go
+  dependencies: gomod
