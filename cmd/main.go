@@ -15,12 +15,14 @@ import (
 func main() {
 	log.SetLevel(log.DebugLevel)
 
-	client, err := opensearchconfig.NewClientFromEnv()
+	ctx := context.Background()
+
+	client, err := opensearchconfig.NewClientFromEnv(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = PingOpenSearch(client)
+	err = PingOpenSearch(ctx, client)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,12 +31,12 @@ func main() {
 }
 
 // PingOpenSearch will make a ping request to the opensearch cluster
-func PingOpenSearch(client *opensearch.Client) error {
+func PingOpenSearch(ctx context.Context, client *opensearch.Client) error {
 	ping := opensearchapi.PingRequest{}
 
 	log.Debug("making a ping request to opensearch")
 
-	resp, err := ping.Do(context.Background(), client)
+	resp, err := ping.Do(ctx, client)
 	if err != nil {
 		log.Fatal(err)
 	}
