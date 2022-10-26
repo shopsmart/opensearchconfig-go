@@ -1,6 +1,7 @@
 ---
 repository:
   name: opensearchconfig-go
+  description: Pulls environment variables to configure the opensearch-go library
   private: true
   has_issues: true
   default_branch: main
