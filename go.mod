@@ -1,4 +1,4 @@
-module github.com/shopsmart/opensearchconfig
+module github.com/shopsmart/opensearchconfig-go
 
 go 1.19
 
