@@ -1,6 +1,3 @@
+# Protect the github settings and code ownership
+.github/CODEOWNERS      @shopsmart/tech-ops-team
 .github/settings.yml    @shopsmart/tech-ops-team
-
-# For non-template repos:
-# Replace this with the team that owns this repo
-# Everything must be go through the web team
-# *          @shopsmart/web-team
