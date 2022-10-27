@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/shopsmart/opensearchconfig"
+	"github.com/shopsmart/opensearchconfig-go"
 )
 
 var _ = Describe("Opensearchconfig", func() {
