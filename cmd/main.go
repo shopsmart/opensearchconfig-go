@@ -9,7 +9,7 @@ import (
 
 	opensearch "github.com/opensearch-project/opensearch-go/v2"
 	"github.com/opensearch-project/opensearch-go/v2/opensearchapi"
-	"github.com/shopsmart/opensearchconfig"
+	"github.com/shopsmart/opensearchconfig-go"
 )
 
 func main() {
