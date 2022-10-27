@@ -32,13 +32,13 @@ var (
 // Config represents the configuration options available with this package
 type Config struct {
 	// Skips ssl if true
-	SkipSSL bool `mapstructure:"skip_ssl"` // OPENSEARCH_SKIP_SSL
+	SkipSSL bool // OPENSEARCH_SKIP_SSL
 	// The auth type to use.  Options are none, basic, iam
-	Auth string `mapstructure:"auth"` // OPENSEARCH_AUTH
+	Auth string // OPENSEARCH_AUTH
 	// The username if auth is basic
-	Username string `mapstructure:"username"` // OPENSEARCH_USERNAME
+	Username string // OPENSEARCH_USERNAME
 	// The password if auth is basic
-	Password string `mapstructure:"password"` // OPENSEARCH_PASSWORD
+	Password string // OPENSEARCH_PASSWORD
 }
 
 // GetConfig will get the Config object from the environment
