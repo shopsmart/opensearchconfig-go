@@ -24,15 +24,17 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
-      - uses: actions/setup-go@v3
+      - name: 'Setup go'
+        uses: actions/setup-go@v3
         with:
           go-version-file: go.mod
           cache-file: go.sum
 
-      - name: go test -v ./...
+      - name: 'Run tests'
+        run: go test -v ./...
 
-  precommit:
-    name: Run precommit check
+  pre-commit:
+    name: 'Run pre-commit check'
     runs-on: ubuntu-latest
     if: github.event.repository.name != 'go-template'
     steps:
