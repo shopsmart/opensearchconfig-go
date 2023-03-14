@@ -21,40 +21,31 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.name != 'go-template'
     steps:
-      - uses: actions/checkout@v2
+      - name: 'Checkout'
+        uses: actions/checkout@v3
 
-      - name: Get Go Version
-        id: goversion
-        run: |
-          set -eo pipefail
-          version="$(< .go-version)"
-          echo "::set-output name=version::$version"
-      - uses: actions/setup-go@v2
+      - name: 'Setup go'
+        uses: actions/setup-go@v3
         with:
-          go-version: ${{ steps.goversion.outputs.version }}
+          go-version-file: go.mod
+          cache-file: go.sum
 
-      - name: Install dependencies
-        run: go mod download
+      - name: 'Run tests'
+        run: go test -v ./...
 
-      - name: go test -v ./...
-
-  precommit:
-    name: Run precommit check
+  pre-commit:
+    name: 'Run pre-commit check'
     runs-on: ubuntu-latest
     if: github.event.repository.name != 'go-template'
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: 'Checkout'
+        uses: actions/checkout@v3
 
-      - name: Get Go Version
-        id: goversion
-        run: |
-          set -eo pipefail
-          version="$(< .go-version)"
-          echo "::set-output name=version::$version"
-      - uses: actions/setup-go@v2
+      - name: 'Setup go'
+        uses: actions/setup-go@v3
         with:
-          go-version: ${{ steps.goversion.outputs.version }}
+          go-version-file: go.mod
+          cache-file: go.sum
 
-      - name: Run pre-commit check
-        uses: pre-commit/action@v2.0.0
+      - name: 'Run pre-commit check'
+        uses: pre-commit/action@v3.0.0
