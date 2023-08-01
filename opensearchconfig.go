@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	opensearch "github.com/opensearch-project/opensearch-go/v2"
 	requestsigner "github.com/opensearch-project/opensearch-go/v2/signer/awsv2"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 
 const (
@@ -69,6 +70,8 @@ func GetConfig() (Config, error) {
 // ConfigFromEnv creates an OpenSearch config object from environment variables
 func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 	opensearchConfig := opensearch.Config{}
+	// Add datadog tracing
+	opensearchConfig.Transport = httptrace.WrapRoundTripper(&http.Transport{})
 
 	cfg, err := GetConfig()
 	if err != nil {
@@ -77,9 +80,9 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 
 	if cfg.SkipSSL {
 		log.Debug("skipping ssl")
-		opensearchConfig.Transport = &http.Transport{
+		opensearchConfig.Transport = httptrace.WrapRoundTripper(&http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
+		})
 	}
 
 	switch cfg.Auth {
