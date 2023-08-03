@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"net/http"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -13,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	opensearch "github.com/opensearch-project/opensearch-go/v2"
 	requestsigner "github.com/opensearch-project/opensearch-go/v2/signer/awsv2"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 
 const (
@@ -22,6 +24,8 @@ const (
 	AuthBasic = "basic"
 	// AuthIAM is the auth type to use if not using the internal user database on the cluster
 	AuthIAM = "iam"
+	// ENV variable to control whether traces are send to datadog
+	DD_TRACE_ENABLED = "DD_TRACE_ENABLED"
 )
 
 var (
@@ -69,6 +73,8 @@ func GetConfig() (Config, error) {
 // ConfigFromEnv creates an OpenSearch config object from environment variables
 func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 	opensearchConfig := opensearch.Config{}
+	// Add datadog tracing
+	opensearchConfig.Transport = &http.Transport{}
 
 	cfg, err := GetConfig()
 	if err != nil {
@@ -80,6 +86,10 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 		opensearchConfig.Transport = &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
+	}
+
+	if os.Getenv(DD_TRACE_ENABLED) == "true" {
+		opensearchConfig.Transport = httptrace.WrapRoundTripper(opensearchConfig.Transport)
 	}
 
 	switch cfg.Auth {
