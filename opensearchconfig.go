@@ -91,7 +91,9 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 	}
 
 	if os.Getenv(DD_TRACE_ENABLED) == "true" {
-		opts := httptrace.RTWithServiceName(Opensearch)
+		opts := httptrace.RTWithResourceNamer(func(req *http.Request) string {
+			return Opensearch
+		})
 		opensearchConfig.Transport = httptrace.WrapRoundTripper(
 			opensearchConfig.Transport,
 			opts,
