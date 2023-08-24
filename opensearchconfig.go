@@ -26,6 +26,8 @@ const (
 	AuthIAM = "iam"
 	// ENV variable to control whether traces are send to datadog
 	DD_TRACE_ENABLED = "DD_TRACE_ENABLED"
+	// Identify the name of the trace in datadog
+	Opensearch = "opensearch"
 )
 
 var (
@@ -89,7 +91,15 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 	}
 
 	if os.Getenv(DD_TRACE_ENABLED) == "true" {
-		opensearchConfig.Transport = httptrace.WrapRoundTripper(opensearchConfig.Transport)
+		var opts []httptrace.RoundTripperOption
+		opts = append(opts, httptrace.RTWithResourceNamer(func(req *http.Request) string {
+			return Opensearch
+		}))
+
+		opensearchConfig.Transport = httptrace.WrapRoundTripper(
+			opensearchConfig.Transport,
+			opts...,
+		)
 	}
 
 	switch cfg.Auth {
