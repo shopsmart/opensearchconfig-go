@@ -27,7 +27,7 @@ const (
 	// ENV variable to control whether traces are send to datadog
 	DD_TRACE_ENABLED = "DD_TRACE_ENABLED"
 	// Identify the name of the trace in datadog
-	Opensearch = "Opensearch"
+	Opensearch = "opensearch"
 )
 
 var (
