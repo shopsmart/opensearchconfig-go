@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	opensearch "github.com/opensearch-project/opensearch-go/v2"
-	requestsigner "github.com/opensearch-project/opensearch-go/v2/signer/awsv2"
+	opensearch "github.com/opensearch-project/opensearch-go/v4"
+	requestsigner "github.com/opensearch-project/opensearch-go/v4/signer/awsv2"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 

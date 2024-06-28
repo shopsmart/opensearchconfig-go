@@ -7,8 +7,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	opensearch "github.com/opensearch-project/opensearch-go/v2"
-	"github.com/opensearch-project/opensearch-go/v2/opensearchapi"
+	opensearch "github.com/opensearch-project/opensearch-go/v4"
+	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"github.com/shopsmart/opensearchconfig-go"
 )
 
@@ -32,11 +32,16 @@ func main() {
 
 // PingOpenSearch will make a ping request to the opensearch cluster
 func PingOpenSearch(ctx context.Context, client *opensearch.Client) error {
-	ping := opensearchapi.PingRequest{}
+	ping := opensearchapi.PingReq{}
 
 	log.Debug("making a ping request to opensearch")
 
-	resp, err := ping.Do(ctx, client)
+	req, err := ping.GetRequest()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp, err := client.Do(ctx, req, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
