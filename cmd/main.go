@@ -32,16 +32,8 @@ func main() {
 
 // PingOpenSearch will make a ping request to the opensearch cluster
 func PingOpenSearch(ctx context.Context, client *opensearch.Client) error {
-	ping := opensearchapi.PingReq{}
-
 	log.Debug("making a ping request to opensearch")
-
-	req, err := ping.GetRequest()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	resp, err := client.Do(ctx, req, nil)
+	resp, err := client.Do(ctx, opensearchapi.PingReq{}, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
