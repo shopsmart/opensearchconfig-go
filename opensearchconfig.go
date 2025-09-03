@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"net/http"
-	"os"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -14,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	opensearch "github.com/opensearch-project/opensearch-go/v4"
 	requestsigner "github.com/opensearch-project/opensearch-go/v4/signer/awsv2"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 
 const (
@@ -88,18 +86,6 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 		opensearchConfig.Transport = &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-	}
-
-	if os.Getenv(DD_TRACE_ENABLED) == "true" {
-		var opts []httptrace.RoundTripperOption
-		opts = append(opts, httptrace.RTWithResourceNamer(func(req *http.Request) string {
-			return Opensearch
-		}))
-
-		opensearchConfig.Transport = httptrace.WrapRoundTripper(
-			opensearchConfig.Transport,
-			opts...,
-		)
 	}
 
 	switch cfg.Auth {
