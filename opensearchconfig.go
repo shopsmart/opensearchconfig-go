@@ -11,10 +11,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
+	httptrace "github.com/DataDog/dd-trace-go/contrib/net/http/v2"
 	"github.com/aws/aws-sdk-go-v2/config"
 	opensearch "github.com/opensearch-project/opensearch-go/v4"
 	requestsigner "github.com/opensearch-project/opensearch-go/v4/signer/awsv2"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 )
 
 const (
@@ -92,7 +92,7 @@ func ConfigFromEnv(ctx context.Context) (opensearch.Config, error) {
 
 	if os.Getenv(DD_TRACE_ENABLED) == "true" {
 		var opts []httptrace.RoundTripperOption
-		opts = append(opts, httptrace.RTWithResourceNamer(func(req *http.Request) string {
+		opts = append(opts, httptrace.WithSpanNamer(func(req *http.Request) string {
 			return Opensearch
 		}))
 
