@@ -1,7 +1,0 @@
----
-name: opensearchconfig-go
-team: techops
-type: library
-tags:
-  language: go
-  dependencies: gomod
