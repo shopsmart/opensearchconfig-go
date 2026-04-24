@@ -1,0 +1,7 @@
+application: opensearchconfig-go
+
+metadata:
+  team: techops
+  type: library
+  language: go
+  dependencies: gomod
